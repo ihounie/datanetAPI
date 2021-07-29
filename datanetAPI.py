@@ -18,11 +18,36 @@
 
 # -*- coding: utf-8 -*-
 
-import os, tarfile, numpy, math, networkx, queue, random,traceback
+import os, tarfile, numpy, math, networkx, queue, random,traceback, wget
 from enum import IntEnum
+from extract import ExtractNested
 
 import timeit
 
+def extract_nested(file_path):
+    ExtractNested(file_path)
+    #os.system(f"tar -xfv {file_path}")
+    #os.system("find . -name \""+file_path+"*.tar.gz\" -exec tar xzf {} \;")
+
+def download_dataset(data_folder,
+                    base_url = "https://bnn.upc.edu/download/",
+                    files = ["ch21-training-dataset", "ch21-validation-dataset"]):
+
+    for file in files:
+        file_path = os.path.join(data_folder, file)
+        if os.path.exists(file_path):
+            print('File %s exists, skipping...' % file)
+            continue
+        elif os.path.exists(file_path+".tar.gz"):
+            print('File %s.tar.gz exists, extracting...' % file)
+            extract_nested(file_path+".tar.gz")    
+        print('Downloading file: ', file)
+        www_path = os.path.join(base_url, file)
+        wget.download(www_path, out=file_path+".tar.gz")
+        print('Extracting File: ', file)
+        extract_nested(file_path)
+    print('Done Downloading and Extracting Dataset!')
+    
 class DatanetException(Exception):
     """
     Exceptions generated when processing dataset
@@ -534,11 +559,14 @@ class DatanetAPI:
         self._routings_dic = {}
         for root, dirs, files in os.walk(self.data_folder):
             if ("graphs" not in dirs or "routings" not in dirs):
-                continue
+                print("Downloading dataset")
+                download_dataset(self.data_folder)
             # Generate graphs dictionaries
             self._graphs_dic[root] = self._generate_graphs_dic(os.path.join(root,"graphs"))
             if (len(self._graphs_dic[root].keys()) == 0):
-                raise DatanetException ("ERROR: No graphs found in directory "+root)
+                print("No graphs found in directory "+root)
+                print("Downloading dataset")
+                download_dataset(self.data_folder)
             self._routings_dic[root] = {}
             files.sort()
             # Extend the list of files to process

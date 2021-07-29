@@ -100,36 +100,36 @@ def Extract(tarfile_fullpath, delete_tar_file=True):
     tar file (after its extraction) you are passing.
     """
     try:
-        print "Extracting '%s'" %tarfile_fullpath,
+        print("Extracting '%s'" %tarfile_fullpath)
         tar = tarfile.open(tarfile_fullpath)
         extract_folder_fullpath = AppropriateFolderName(tarfile_fullpath[:\
           -1*len(FileExtension(tarfile_fullpath))-1])
         extract_folder_name = os.path.basename(extract_folder_fullpath)
-        print "to '%s'..." %extract_folder_name,
+        print("to '%s'..." %extract_folder_name)
         tar.extractall(extract_folder_fullpath)
-        print "Done!"
+        print("Done!")
         tar.close()
         if delete_tar_file: os.remove(tarfile_fullpath)
         return extract_folder_name
 
     except Exception:
         # Exceptions can occur while opening a damaged tar file.
-        print '(Error)\n(%s)' %str(sys.exc_info()[1]).capitalize()
+        print('(Error)\n(%s)' %str(sys.exc_info()[1]).capitalize())
         global error_count
         error_count += 1
 
 def ExtractGz(tarfile_fullpath, delete_tar_file=True):
     
     try:
-        print "Extracting '%s'" %tarfile_fullpath,
+        print("Extracting '%s'" %tarfile_fullpath)
         gz = gzip.open(tarfile_fullpath)
         extract_folder_fullpath = AppropriateFolderName(tarfile_fullpath[:\
           -1*len(FileExtension(tarfile_fullpath))-1])
         extract_folder_name = os.path.basename(extract_folder_fullpath)
-        print "to '%s'..." %extract_folder_name,
+        print("to '%s'..." %extract_folder_name)
         output = open(extract_folder_fullpath,"wb")
         output.write( gz.read() )
-        print "Done!"
+        print("Done!")
         gz.close()
         output.close()
         if delete_tar_file: os.remove(tarfile_fullpath)
@@ -137,7 +137,7 @@ def ExtractGz(tarfile_fullpath, delete_tar_file=True):
 
     except Exception:
         # Exceptions can occur while opening a damaged tar file.
-        print '(Error)\n(%s)' %str(sys.exc_info()[1]).capitalize()
+        print('(Error)\n(%s)' %str(sys.exc_info()[1]).capitalize())
         global error_count
         error_count += 1
 
@@ -149,8 +149,8 @@ def WalkTreeAndExtract(parent_dir):
     except OSError:
         # Exception can occur if trying to open some folder whose
         # permissions this program does not have.
-        print 'Error occured. Could not open folder %s\n%s'\
-          %( parent_dir, str(sys.exc_info()[1]).capitalize())
+        print('Error occured. Could not open folder %s\n%s'\
+          %( parent_dir, str(sys.exc_info()[1]).capitalize()))
         global error_count
         error_count += 1
         return
@@ -180,7 +180,7 @@ def WalkTreeAndExtract(parent_dir):
                     # to extract.
         else:
             # Unknown file type.
-            print 'Skipping %s. <Neither file nor folder>' % content_fullpath
+            print('Skipping %s. <Neither file nor folder>' % content_fullpath)
 
 def ExtractNested(tarfile_fullpath):
     extract_folder_name = Extract(tarfile_fullpath, False)
