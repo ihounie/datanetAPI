@@ -1,3 +1,11 @@
+# My Documentation
+I have modified dataNet API class to download and extract the dataset whenever initialised with a path where no data is found.
+I had to add `extract.py` in order to extract the nested tar files.
+`download_and_extract.py` simply initialises the class with `./dataset` as path.
+
+## To do
+* add CLI (argparse) to download_and_extract in order to customise the dataset path.
+
 # DataNet API Documentation
 
 #### Contact mailing list: kdn-users@knowledgedefinednetworking.org
